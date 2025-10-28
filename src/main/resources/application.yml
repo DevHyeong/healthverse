@@ -1,0 +1,46 @@
+spring:
+  application:
+    name: healthverse
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:9999/healthverse
+    username: healthverse
+    password: healthverse
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
+  security:
+    oauth2:
+      client:
+        registration:
+          kakao:
+            client-id: 64dfbd230bad34ea1eb78d8cca9d65c0
+            client-secret: E9kQER95d2V74PMJc2zS2lElsBuEWOR5
+            redirect-uri: "http://localhost:8080/login/oauth2/code/kakao"
+            authorization-grant-type: authorization_code
+            client-authentication-method: client_secret_post
+        provider:
+          kakao:
+            authorization-uri: https://kauth.kakao.com/oauth/authorize
+            token-uri: https://kauth.kakao.com/oauth/token
+            user-info-uri: https://kapi.kakao.com/v2/user/me
+            user-name-attribute: id
+
+jwt:
+  secret: your_jwt_secret_key
+
+front:
+  url: http://localhost:3000
+  callback-path: /oauth/callback/kakao
+
+
+logging:
+  level:
+    org.springframework.security.oauth2: DEBUG
+    root: debug
