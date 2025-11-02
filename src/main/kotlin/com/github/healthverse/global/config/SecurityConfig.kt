@@ -4,12 +4,14 @@ import com.github.healthverse.domain.user.handler.OAuth2FailHandler
 import com.github.healthverse.domain.user.handler.OAuth2SuccessHandler
 import com.github.healthverse.domain.user.repository.CookieOAuth2AuthorizationRequestRepository
 import com.github.healthverse.domain.user.service.CustomOAuth2UserService
+import com.github.healthverse.global.filter.AuthenticationFilter
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.web.SecurityFilterChain
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.web.cors.CorsConfiguration
 import org.springframework.web.cors.CorsConfigurationSource
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource
@@ -17,6 +19,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource
 @Configuration
 @EnableWebSecurity
 class SecurityConfig(
+    private val authenticationFilter: AuthenticationFilter,
     private val cookieOAuth2AuthorizationRequestRepository: CookieOAuth2AuthorizationRequestRepository,
     private val customOAuth2UserService: CustomOAuth2UserService,
     private val oAuth2SuccessHandler: OAuth2SuccessHandler,
@@ -26,15 +29,14 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
-            //.cors { cors -> cors.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
             .sessionManagement { it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
             .authorizeHttpRequests { auth ->
-                auth.anyRequest().permitAll()
-                //auth.anyRequest().authenticated()
+                auth.anyRequest().authenticated()
             }
+            .addFilterBefore(authenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
             .oauth2Login {
                 it.authorizationEndpoint { endpoint ->
                     endpoint.baseUri("/oauth2/authorize")

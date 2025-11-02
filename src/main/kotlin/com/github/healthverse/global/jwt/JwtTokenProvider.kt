@@ -36,4 +36,12 @@ class JwtTokenProvider(
             .withExpiresAt(expiry)
             .sign(Algorithm.HMAC256(secret))
     }
+
+    fun validateAndGetUserId(token: String): Long {
+        val decodedJWT = JWT.require(Algorithm.HMAC256(secret))
+            .build()
+            .verify(token)
+
+        return decodedJWT.subject.toLong()
+    }
 }
