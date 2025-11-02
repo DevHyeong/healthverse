@@ -1,0 +1,41 @@
+ ### Record a new exercise
+POST {{host}}/api/v1/exercises
+Content-Type: application/json
+Authorization: {{token}}
+
+{
+  "startedAt": "2024-03-19T14:30:00",
+  "endedAt": "2024-03-19T15:30:00",
+  "memo": "Great workout session",
+  "weightTrainings": [
+    {
+      "name": "Bench Press",
+      "weight": 70.5,
+      "sets": 3,
+      "reps": 12,
+      "memo": "Increased weight by 2.5kg"
+    },
+    {
+      "name": "Squat",
+      "weight": 90.0,
+      "sets": 4,
+      "reps": 10,
+      "memo": "Maintained good form"
+    }
+  ]
+}
+
+###
+GET {{host}}/api/v1/exercises?startDate=2024-03-01&endDate=2024-04-03
+Content-Type: application/json
+Authorization: {{token}}
+
+
+
+
+###
+GET {{host}}/api/v1/exercises/health-check
+Content-Type: application/json
+Authorization: {{token}}
+
+
