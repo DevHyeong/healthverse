@@ -29,6 +29,7 @@ class SecurityConfig(
     @Bean
     fun securityFilterChain(http: HttpSecurity): SecurityFilterChain {
         http
+            .cors { it.configurationSource(corsConfigurationSource()) }
             .csrf { it.disable() }
             .formLogin { it.disable() }
             .httpBasic { it.disable() }
@@ -53,13 +54,13 @@ class SecurityConfig(
     fun corsConfigurationSource(): CorsConfigurationSource {
         val configuration = CorsConfiguration().apply {
             allowedOriginPatterns = listOf(
-                "http://localhost:3000",     // React / Next.js 로컬
+                "http://localhost:3000",
                 "https://kauth.kakao.com"
             )
             allowedMethods = listOf("GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS")
             allowedHeaders = listOf("*")
             exposedHeaders = listOf("Authorization", "Set-Cookie")
-            allowCredentials = true // 쿠키 인증을 허용해야 함 (중요)
+            allowCredentials = true
         }
 
         val source = UrlBasedCorsConfigurationSource()

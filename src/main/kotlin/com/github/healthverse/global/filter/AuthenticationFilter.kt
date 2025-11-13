@@ -34,8 +34,9 @@ class AuthenticationFilter(
         }
 
         try {
+            val removedPrefixAuthKey = authKey.removePrefix("Bearer ").trim()
             // JWT 검증 및 사용자 ID 추출
-            val userId = jwtTokenProvider.validateAndGetUserId(authKey)
+            val userId = jwtTokenProvider.validateAndGetUserId(removedPrefixAuthKey)
 
             // 사용자 정보 조회
             val user = userRepository.findById(userId)
